@@ -1,12 +1,12 @@
 MailSystem.Prototype
 ====================
 
-ÓÊ¼şµÄ¶©ÔÄ·Ö·¢Ô­ĞÍ³ÌĞò¡£
+é‚®ä»¶çš„è®¢é˜…åˆ†å‘åŸå‹ç¨‹åºã€‚
 
-MailProtocol ¡ª¡ª ÓÊ¼ş·şÎñÆ÷µÄĞ­Òé
-AgentProtocol ¡ª¡ª ÓÃ»§Agent·şÎñÆ÷Ğ­Òé
-MailServer ¡ª¡ª ÓÊ¼ş·şÎñÆ÷
-AgentServer ¡ª¡ª Agent·şÎñÆ÷
-TestClient ¡ª¡ª ²âÊÔ¿Í»§¶Ë
+* MailProtocol â€”â€” é‚®ä»¶æœåŠ¡å™¨çš„åè®®
+* AgentProtocol â€”â€” ç”¨æˆ·AgentæœåŠ¡å™¨åè®®
+* MailServer â€”â€” é‚®ä»¶æœåŠ¡å™¨
+* AgentServer â€”â€” AgentæœåŠ¡å™¨
+* TestClient â€”â€” æµ‹è¯•å®¢æˆ·ç«¯
 
-ÔËĞĞRun.bat¼´¿ÉÆô¶¯4¸ö²âÊÔ½ø³Ì£¬ÔÚMailServerÉÏÔËĞĞÃüÁîĞĞ: SendMail username mailcontent ¼´¿ÉÏòÓÃ»§·¢ËÍÓÊ¼ş£¬Èç¹ûÓÃ»§ÔÚÏßÔò»áÊÕµ½ÓÊ¼şÍ¨Öª¡£
+è¿è¡ŒRun.batå³å¯å¯åŠ¨4ä¸ªæµ‹è¯•è¿›ç¨‹ï¼Œåœ¨MailServerä¸Šè¿è¡Œå‘½ä»¤è¡Œ: SendMail username mailcontent å³å¯å‘ç”¨æˆ·å‘é€é‚®ä»¶ï¼Œå¦‚æœç”¨æˆ·åœ¨çº¿åˆ™ä¼šæ”¶åˆ°é‚®ä»¶é€šçŸ¥ã€‚
