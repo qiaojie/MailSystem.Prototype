@@ -27,9 +27,35 @@ using EasyGame;
 		{
 			RegisterMethod(0, OnError_0);
 			RegisterMethod(1, OnMessage_1);
+			RegisterMethod(3, GetMails_3);
 		}
 
 		#region CallbackStub
+		void GetMails_3(BinaryStreamReader reader)
+		{
+			int id;
+			int ret;
+			reader.Read(out id);
+			reader.Read(out ret);
+			if(ret == 0)
+			{
+				string[] p0;
+				reader.Read(out p0);
+				var callback = PopAsyncRequest(id);
+				var reply = callback.Reply as Action<string[]>;
+				reply(p0);
+			}
+			else
+			{
+				var callback = PopAsyncRequest(id);
+				string msg;
+				reader.Read(out msg);
+				if(callback.Error != null)
+					callback.Error(ret, msg);
+				else
+					_handler.OnError(ret, msg);
+			}
+		}
 		void OnError_0(BinaryStreamReader __reader)
 		{
 			int errCode;
@@ -65,6 +91,14 @@ using EasyGame;
 		{
 			BinaryStreamWriter __stream = new BinaryStreamWriter();
 			__stream.Write(2);
+			__stream.Write(userId);
+			Connection.Write(__stream.Buffer, __stream.Position);
+		}
+		void IMailServer.GetMails(string userId, Action<string[]> OnResults)
+		{
+			BinaryStreamWriter __stream = new BinaryStreamWriter();
+			__stream.Write(3);
+			__stream.Write(AddAsyncRequest(OnResults, null));
 			__stream.Write(userId);
 			Connection.Write(__stream.Buffer, __stream.Position);
 		}

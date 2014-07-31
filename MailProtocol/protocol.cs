@@ -15,4 +15,6 @@ public interface IMailServer
 	void Subscribe(string userId);
 	[DispId(2)]
 	void Unsubscribe(string userId);
+	[DispId(3), Async]
+	void GetMails(string userId, Action<string[]> OnResults);
 }

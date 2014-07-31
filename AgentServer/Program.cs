@@ -49,6 +49,12 @@ class AgentService : ServiceBase, IAgentServerImpl, IMailServerCallback
 			IAgentServerCallbackProxy.OnNewMail(user.Connection, mail);			
 		}
 	}
+
+	void IAgentServerImpl.GetMails(Session session, IAgentServer_GetMailsCallback cb)
+	{
+		var userId = (string)session.UserData;
+		_mailServer.Call.GetMails(userId, mails => cb.Reply(mails));
+	}
 }
 
 class Program

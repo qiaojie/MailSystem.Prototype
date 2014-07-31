@@ -6,21 +6,85 @@ using EasyGame;
 
 
 	/// <exclude/>
+	public class IMailServer_GetMailsCallback : AsyncRequestCallback
+	{
+		public IMailServer_GetMailsCallback(int reqId, Connection conn)
+		{
+			_reqId = reqId;
+			_connection = conn;
+		}
+
+		public void Error(int error, string msg)
+		{
+			var stream = new BinaryStreamWriter();
+		#if (DEBUG || LOG_PROTOCOL)
+			Log.Debug("GetMails Failed. reqId: {0}, errCode:{1} errMsg:{2}", _reqId, error, msg);
+		#endif
+			stream.Write(3);
+			stream.Write(_reqId);
+			stream.Write(error);
+			stream.Write(msg);
+			_connection.Write(stream.Buffer, stream.Position);
+		}
+		public void Reply(string[] p0)
+		{
+			var stream = new BinaryStreamWriter();
+		#if (DEBUG || LOG_PROTOCOL)
+			Log.Debug("GetMails Reply. reqId: {0}, result: {1}", _reqId, Log.ObjToString(p0));
+		#endif
+			stream.Write(3);
+			stream.Write(_reqId);
+			stream.Write(0);
+			stream.Write(p0);
+			_connection.Write(stream.Buffer, stream.Position);
+		}
+	}
+	/// <exclude/>
 	[ServiceAuxiliary(Type = typeof(IMailServer), Stub = typeof(IMailServerStub))]
 	public interface IMailServerImpl
 	{
 		void Subscribe(Session session, string userId);
 		void Unsubscribe(Session session, string userId);
+		void GetMails(Session session, string userId, IMailServer_GetMailsCallback cb);
 	}
 	/// <exclude/>
 	public class IMailServerStub : StubBase
 	{
 		public IMailServerStub()
 		{
+			AddMethodDispatcher(3, GetMails_3);
 			AddMethodDispatcher(1, Subscribe_1);
 			AddMethodDispatcher(2, Unsubscribe_2);
 		}
 
+		static BinaryStreamWriter GetMails_3(object __serviceObj, Session __client, BinaryStreamReader __reader)
+		{
+			var __timer = TimeCounter.BeginNew();
+			IMailServerImpl __service = (IMailServerImpl)__serviceObj;
+			string userId;
+			int __reqId;
+			__reader.Read(out __reqId);
+			__reader.Read(out userId);
+		#if (DEBUG || LOG_PROTOCOL)
+			Log.Debug("GetMails  reqId: {0}, userId: {0}",  __reqId, userId);
+		#endif
+			var reply = new IMailServer_GetMailsCallback(__reqId, __client.Connection);
+			try
+			{
+				__service.GetMails(__client, userId, reply);
+			}
+			catch(ServiceException e)
+			{
+				reply.Error(e.ErrCode, e.Message);
+			}
+			catch(Exception e)
+			{
+				Log.Error("Generic Service Invoke Failed, clientId:{0} error message:{1}\nCall Stack: {2}", __client.ID, e.Message, e.StackTrace);
+				reply.Error((int)ServiceErrorCode.Generic, "generic service error.");
+			}
+			PerfStatistic.AddItem("IMailServer.GetMails", (int)__timer.End());
+			return null;
+		}
 		static BinaryStreamWriter Subscribe_1(object __serviceObj, Session __client, BinaryStreamReader __reader)
 		{
 			var __timer = TimeCounter.BeginNew();

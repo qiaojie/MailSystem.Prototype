@@ -28,6 +28,13 @@ class Program
 		proxy.RegisterCallback(client);
 		proxy.Connect("127.0.0.1", 12000, ctx);
 		proxy.Call.Login(args[0]);
+		proxy.Call.GetMails(mails =>
+		{
+			foreach(var mail in mails)
+			{
+				Log.Info("Get mail: {0}", mail);
+			}
+		});
 		ctx.Run();
 	}
 }

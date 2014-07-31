@@ -45,6 +45,12 @@ class MailService : ServiceBase, IMailServerImpl, ICmdline
 		}
 		_mailbox.Add(new MailData() { receiver = receiver, mail = mail });
 	}
+
+	void IMailServerImpl.GetMails(Session session, string userId, IMailServer_GetMailsCallback cb)
+	{
+		var mails = _mailbox.Where(m => m.receiver == userId).Select(m => m.mail).ToArray();
+		cb.Reply(mails);
+	}
 }
 
 class Program
